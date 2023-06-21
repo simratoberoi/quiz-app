@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="stylesheet" href="style.css">
+
+  <title>Quiz App</title>
+</head>
+<body>
+  <h1>Let's get quizzing!</h1>
+  <h2>Made by Simrat</h2>
+  <form id="start-form">
+    <input type="text" id="name-input" placeholder="Enter your name" required>
+    <select id="category-select" required>
+      <option value="">Select a category</option>
+      <option value="9">General Knowledge</option>
+      <option value="10">Books</option>
+      <option value="11">Film</option>
+      <option value="12">Music</option>
+      <option value="13">Musicals & Theatre</option>
+      <option value="14">Televisions</option>
+      <option value="18">Science: Computers</option>
+    </select>
+    <select id="difficulty-select" required>
+      <option value="">Select difficulty</option>
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+    <button type="submit" class="sub">Start Quiz</button>
+  </form>
+
+  <div id="quiz-container"></div>
+
+  <script>
+    const API_URL = 'https://opentdb.com/api.php?amount=10&type=multiple';
+
+    const startForm = document.getElementById('start-form');
+    const quizContainer = document.getElementById('quiz-container');
+    let currentQuestion = 0;
+    let score = 0;
+    let questions = [];
+
+    startForm.addEventListener('submit', startQuiz);
+
+    function startQuiz(e) {
+      e.preventDefault();
+
+      const nameInput = document.getElementById('name-input');
+      const categorySelect = document.getElementById('category-select');
+      const difficultySelect = document.getElementById('difficulty-select');
+
+      const name = nameInput.value;
+      const category = categorySelect.value;
+      const difficulty = difficultySelect.value;
+
+      if (!name || !category || !difficulty) {
+        alert('Please fill in all fields!');
+        return;
+      }
+
+      startForm.style.display = 'none';
+      quizContainer.style.display = 'block';
+
+      fetch(`${API_URL}&category=${category}&difficulty=${difficulty}`)
+        .then(response => response.json())
+        .then(data => {
+          questions = data.results;
+          renderQuestion();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while fetching questions. Please try again later.');
+        });
+    }
+
+    function renderQuestion() {
+      if (currentQuestion >= questions.length) {
+        showResult();
+        return;
+      }
+
+      const question = questions[currentQuestion];
+      const answers = [...question.incorrect_answers, question.correct_answer];
+      const shuffledAnswers = shuffleArray(answers);
+
+      const quizDiv = document.createElement('div');
+      quizDiv.innerHTML = `
+        <h2>Question ${currentQuestion + 1}</h2>
+        <p>${question.question}</p>
+        ${shuffledAnswers.map(answer => `
+            <div class="button-container">
+                <button class="answer-button">${answer}</button>
+                </div>
+            `).join('')}
+      `;
+
+      quizContainer.innerHTML = '';
+      quizContainer.appendChild(quizDiv);
+
+      const answerButtons = document.getElementsByClassName('answer-button');
+      for (const button of answerButtons) {
+        button.addEventListener('click', handleAnswer);
+      }
+    }
+
+    function handleAnswer(e) {
+      const selectedAnswer = e.target.innerText;
+      const question = questions[currentQuestion];
+
+      if (selectedAnswer === question.correct_answer) {
+        score++;
+      }
+
+      currentQuestion++;
+      renderQuestion();
+    }
+
+    function showResult() {
+      quizContainer.innerHTML = `
+        <h2>Quiz Completed!</h2>
+        <p>Your score: ${score}/${questions.length}</p>
+        <button class="try" onclick="window.location.href = window.location.href">Try Again</button>
+      `;
+    }
+
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+  </script>
+</body>
+</html>
+
