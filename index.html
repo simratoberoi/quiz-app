@@ -32,6 +32,7 @@
   </form>
 
   <div id="quiz-container"></div>
+  <div id="timer"></div>
 
   <script>
     const API_URL = 'https://opentdb.com/api.php?amount=10&type=multiple';
@@ -41,6 +42,8 @@
     let currentQuestion = 0;
     let score = 0;
     let questions = [];
+    const totaltime = 300;
+    let timeLeft = totaltime;
 
     startForm.addEventListener('submit', startQuiz);
 
@@ -54,6 +57,11 @@
       const name = nameInput.value;
       const category = categorySelect.value;
       const difficulty = difficultySelect.value;
+      startForm.style.display = 'none';
+      quizContainer.style.display = 'block';
+
+      startTimer();
+      renderQuestion();
 
       if (!name || !category || !difficulty) {
         alert('Please fill in all fields!');
@@ -74,6 +82,29 @@
           alert('An error occurred while fetching questions. Please try again later.');
         });
     }
+    function startTimer() {
+  const timerElement = document.getElementById('timer');
+
+  const timerInterval = setInterval(() => {
+    timeLeft--;
+    timerElement.textContent = formatTime(timeLeft);
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      showResult();
+    }
+  }, 1000);
+}
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  return `${padZero(minutes)}:${padZero(remainingSeconds)}`;
+}
+
+function padZero(value) {
+  return value.toString().padStart(2, '0');
+}
 
     function renderQuestion() {
       if (currentQuestion >= questions.length) {
@@ -118,6 +149,7 @@
     }
 
     function showResult() {
+      clearInterval(timerInterval);
       quizContainer.innerHTML = `
         <h2>Quiz Completed!</h2>
         <p>Your score: ${score}/${questions.length}</p>
