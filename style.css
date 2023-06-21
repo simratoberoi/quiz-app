@@ -1,10 +1,8 @@
 body {
     text-align: center;
     font-family: "poppins", sans-serif;
-    background-image: url('/images/2.png');
-    background-size: fill;
-    background-repeat: no-repeat;
   }
+
 h1 {
     margin-top: 50px;
     color:#fff8de;
@@ -134,7 +132,28 @@ p{
     color: #f8f8f3;
 }
 
-.try.clicked {
-    background-color: #412f88;
-    color: #f8f8f3;
-  }
+
+  @media (max-width: 767px) {
+    body {
+      background-image: url('/images/1.png');
+      background-size: cover;
+      background-repeat: no-repeat;}
+    }
+
+    @media (min-width: 768px) {
+      body {
+        background-image: url('/images/2.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+      }}
+
+      .correct {
+        background-color: #53c449;
+        color: #f8f8f3;
+      }
+      
+      .incorrect {
+        background-color: #d83232;
+        color: #f8f8f3;
+      }
+      

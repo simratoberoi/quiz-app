@@ -106,16 +106,33 @@
     }
 
     function handleAnswer(e) {
-      const selectedAnswer = e.target.innerText;
-      const question = questions[currentQuestion];
+  const selectedAnswer = e.target.innerText;
+  const question = questions[currentQuestion];
 
-      if (selectedAnswer === question.correct_answer) {
-        score++;
+  const answerButtons = document.getElementsByClassName('answer-button');
+
+  for (const button of answerButtons) {
+    button.disabled = true; // Disable all answer buttons after selection
+  }
+
+  if (selectedAnswer === question.correct_answer) {
+    e.target.classList.add('correct');
+    score++;
+  } else {
+    e.target.classList.add('incorrect');
+    // Find and highlight the correct answer
+    for (const button of answerButtons) {
+      if (button.innerText === question.correct_answer) {
+        button.classList.add('correct');
+        break;
       }
-
-      currentQuestion++;
-      renderQuestion();
     }
+  }
+
+  currentQuestion++;
+  setTimeout(renderQuestion, 3000); // Delay rendering the next question for 1 second
+}
+
 
     function showResult() {
       quizContainer.innerHTML = `
