@@ -88,23 +88,22 @@ p{
     color:rgb(59, 59, 59);
     margin: 10px;
     transition: background-color 0.3s, color 0.3s;
-    width: 200px; 
+    font-size: 16px;
+    margin-right: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: 60%;
     height: 40px;
-    font-size: 15px;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
-  margin-right: 10px;
-  flex: 1;
-  display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .button-container {
     display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-.answer-button:last-child {
-    margin-right: 0;
-  }
 .answer-button:hover{
     background-color: #412f88;
     color: #f8f8f3;
@@ -135,13 +134,13 @@ p{
     color: #f8f8f3;
 }
 
-      .correct {
-        background-color: #53c449;
-        color: #f8f8f3;
-      }
+.correct {
+  background-color: #53c449;
+  color: #f8f8f3;
+}
       
-      .incorrect {
-        background-color: #d83232;
-        color: #f8f8f3;
-      }
+.incorrect {
+  background-color: #d83232;
+  color: #f8f8f3;
+}
       
